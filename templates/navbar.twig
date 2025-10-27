@@ -1,0 +1,111 @@
+<nav class="container navbar">
+  <div class="navbar-container">
+    {# Brand #}
+    <div 
+      class="navbar-brand" 
+      onclick="handleNavigation(isLoggedIn ? '/dashboard' : '/')"
+    >
+      TicketApp
+    </div>
+
+    {# Desktop Navigation #}
+    <div class="navbar-desktop">
+      {% if isLoggedIn %}
+        <span class="user-greeting">Hi, {{ userName }}!</span>
+        <button 
+          class="nav-button nav-button-dashboard"
+          onclick="handleNavigation('/dashboard')"
+        >
+          Dashboard
+        </button>
+      {% else %}
+        <button 
+          class="nav-button nav-button-secondary"
+          onclick="handleNavigation('/login')"
+        >
+          Login
+        </button>
+        <button 
+          class="nav-button nav-button-primary"
+          onclick="handleNavigation('/sign-up')"
+        >
+          Get Started
+        </button>
+      {% endif %}
+    </div>
+
+    {# Hamburger Menu — only show when NOT logged in #}
+    {% if not isLoggedIn %}
+      <div 
+        id="hamburger"
+        class="hamburger"
+        onclick="toggleMenu()"
+      >
+        <div class="hamburger-line"></div>
+        <div class="hamburger-line"></div>
+        <div class="hamburger-line"></div>
+      </div>
+    {% endif %}
+  </div>
+
+  {# Mobile Menu #}
+  {% if not isLoggedIn %}
+    <div id="mobileMenu" class="mobile-menu">
+      <button 
+        class="nav-button nav-button-secondary"
+        onclick="handleNavigation('/login')"
+      >
+        Login
+      </button>
+      <button 
+        class="nav-button nav-button-primary"
+        onclick="handleNavigation('/sign-up')"
+      >
+        Get Started
+      </button>
+    </div>
+  {% endif %}
+</nav>
+
+<script>
+  let isMenuOpen = false;
+  let isLoggedIn = false;
+  let userName = '';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    checkAuthStatus();
+  });
+
+  function checkAuthStatus() {
+    const session = localStorage.getItem('ticketapp_session');
+    if (session) {
+      try {
+        const sessionData = JSON.parse(session);
+        if (new Date(sessionData.expiresAt) > new Date()) {
+          isLoggedIn = true;
+          userName = sessionData.name?.split(' ')[0] || 'User';
+        } else {
+          localStorage.removeItem('ticketapp_session');
+          isLoggedIn = false;
+        }
+      } catch (err) {
+        console.error('Session error:', err);
+        isLoggedIn = false;
+      }
+    } else {
+      isLoggedIn = false;
+    }
+  }
+
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const hamburger = document.getElementById('hamburger');
+    isMenuOpen = !isMenuOpen;
+    menu.classList.toggle('open', isMenuOpen);
+    hamburger.classList.toggle('active', isMenuOpen);
+  }
+
+  function handleNavigation(path) {
+    window.location.href = path;
+  }
+</script>
