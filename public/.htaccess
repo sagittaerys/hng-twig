@@ -1,12 +1,8 @@
 RewriteEngine On
 
-# Redirect all requests to index.php
+# If the requested file or directory exists, serve it directly
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php [QSA,L]
 
-# Prevent directory browsing
-Options -Indexes
-
-# Set default charset
-AddDefaultCharset UTF-8
+# Otherwise, route all requests to index.php
+RewriteRule ^ index.php [QSA,L]
