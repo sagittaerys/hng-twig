@@ -2,26 +2,21 @@
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
-
 // Enable ALL error reporting
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('log_errors', 1);
 
-// Test if PHP is running
-echo "<!-- PHP is running -->\n";
-
+// IMPORTANT: Start session BEFORE any output
+session_start();
 
 try {
-    session_start();
-    
     // Check if vendor exists
     if (!file_exists(__DIR__ . '/../vendor/autoload.php')) {
         die('ERROR: Composer dependencies not installed. Run: composer install');
     }
     
     require_once __DIR__ . '/../vendor/autoload.php';
-
 
     // Check if templates directory exists
     if (!is_dir(__DIR__ . '/../templates')) {
