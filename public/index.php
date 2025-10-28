@@ -18,6 +18,12 @@ try {
     
     require_once __DIR__ . '/../vendor/autoload.php';
 
+    // Manually require all controller files to ensure they're loaded
+    require_once __DIR__ . '/../src/controllers/BaseController.php';
+    require_once __DIR__ . '/../src/controllers/AuthController.php';
+    require_once __DIR__ . '/../src/controllers/DashboardController.php';
+    require_once __DIR__ . '/../src/controllers/TicketController.php';
+
     // Check if templates directory exists
     $templatesPath = __DIR__ . '/../templates';
     if (!is_dir($templatesPath)) {
@@ -53,7 +59,7 @@ try {
         }
     }));
 
-    // Simple router - FIXED
+    // Simple router
     $request_uri = $_SERVER['REQUEST_URI'];
     $path = parse_url($request_uri, PHP_URL_PATH);
     
@@ -73,7 +79,6 @@ try {
         
         case '/login':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                require_once __DIR__ . '/../src/controllers/AuthController.php';
                 $controller = new App\Controllers\AuthController($twig);
                 $controller->login();
             } else {
@@ -84,7 +89,6 @@ try {
         case '/sign-up':
         case '/signup':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                require_once __DIR__ . '/../src/controllers/AuthController.php';
                 $controller = new App\Controllers\AuthController($twig);
                 $controller->signup();
             } else {
@@ -93,13 +97,11 @@ try {
             break;
         
         case '/dashboard':
-            require_once __DIR__ . '/../src/controllers/DashboardController.php';
             $controller = new App\Controllers\DashboardController($twig);
             $controller->index();
             break;
         
         case '/tickets':
-            require_once __DIR__ . '/../src/controllers/TicketController.php';
             $controller = new App\Controllers\TicketController($twig);
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $controller->create();
@@ -110,7 +112,6 @@ try {
         
         case '/tickets/update':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                require_once __DIR__ . '/../src/controllers/TicketController.php';
                 $controller = new App\Controllers\TicketController($twig);
                 $controller->update();
             } else {
@@ -121,7 +122,6 @@ try {
         
         case '/tickets/delete':
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                require_once __DIR__ . '/../src/controllers/TicketController.php';
                 $controller = new App\Controllers\TicketController($twig);
                 $controller->delete();
             } else {
@@ -131,7 +131,6 @@ try {
             break;
         
         case '/logout':
-            require_once __DIR__ . '/../src/controllers/AuthController.php';
             $controller = new App\Controllers\AuthController($twig);
             $controller->logout();
             break;
