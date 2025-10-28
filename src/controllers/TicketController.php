@@ -1,12 +1,13 @@
 <?php
 namespace App\Controllers;
 
-class TicketController
+class TicketController extends BaseController
 {
     private string $storagePath;
 
-    public function __construct(private $twig)
+    public function __construct($twig)
     {
+        parent::__construct($twig);
         // data directory one level up from src (project root /data)
         $this->storagePath = realpath(__DIR__ . '/../../data') . '/tickets.json';
         // ensure file exists
@@ -29,36 +30,6 @@ class TicketController
     private function saveTickets(array $tickets): bool
     {
         return file_put_contents($this->storagePath, json_encode(array_values($tickets), JSON_PRETTY_PRINT)) !== false;
-    }
-
-    private function flash(string $type, string $message): void
-    {
-        $_SESSION['flash'] = ['type' => $type, 'message' => $message];
-    }
-
-    private function getUser()
-    {
-        // expect session structure like:
-        // $_SESSION['ticketapp_session'] = ['userId' => '...', 'name' => '...', 'expiresAt' => '...'];
-        return $_SESSION['ticketapp_session'] ?? null;
-    }
-
-    private function ensureAuthenticated()
-    {
-        $session = $this->getUser();
-        if (!$session) {
-            $this->flash('error', 'You must be logged in to access that page.');
-            header('Location: /login');
-            exit;
-        }
-        // optional expiry check
-        if (!empty($session['expiresAt']) && strtotime($session['expiresAt']) < time()) {
-            unset($_SESSION['ticketapp_session']);
-            $this->flash('error', 'Your session has expired — please log in again.');
-            header('Location: /login');
-            exit;
-        }
-        return $session;
     }
 
     public function index()
@@ -111,7 +82,8 @@ class TicketController
         $flash = $_SESSION['flash'] ?? null;
         unset($_SESSION['flash']);
 
-        echo $this->twig->render('tickets.twig', [
+        // Use parent's render method to include isLoggedIn and userName
+        $this->render('tickets.twig', [
             'user' => $session,
             'tickets' => $tickets,
             'stats' => ['total' => $total, 'open' => $open, 'resolved' => $resolved],

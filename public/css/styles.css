@@ -666,6 +666,7 @@ body {
   background-color: #a78bfa;
   color: white;
   border: none;
+  text-decoration: none;
   border-radius: 8px;
   font-size: 0.9375rem;
   font-weight: 600;
@@ -804,6 +805,7 @@ body {
 
 .create-btn {
   padding: 0.5rem 1rem;
+  text-decoration: none;
   background-color: #a78bfa;
   color: white;
   border: none;
@@ -818,6 +820,7 @@ body {
 
 .back-btn {
   padding: 0.5rem 1rem;
+  text-decoration: none;
   background-color: transparent;
   color: #a78bfa;
   border: 1px solid #a78bfa;
@@ -1038,6 +1041,8 @@ body {
 
 .modal-btn {
   flex: 1;
+  text-align: center;
+  text-decoration: none;
   padding: 0.75rem;
   border: none;
   border-radius: 8px;

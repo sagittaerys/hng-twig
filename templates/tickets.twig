@@ -56,11 +56,9 @@
 </div>
 
 {# --- Create / Edit Modal --- #}
-{% set old = session.form_old ?? {} %}
-{% set formErrors = session.form_errors ?? {} %}
-{# clear these so they don't persist next render (controller would unset flash; do it here too) #}
-{% do session.remove('form_errors') if session.form_errors is defined %}
-{% do session.remove('form_old') if session.form_old is defined %}
+{# Note: In Twig, session data should be accessed differently. The controller should handle clearing form data. #}
+{% set old = {} %}
+{% set formErrors = {} %}
 
 <div id="modalOverlay" class="modal-overlay" style="display: {{ showModal ? 'flex' : 'none' }};">
   <div class="modal" onclick="event.stopPropagation()">

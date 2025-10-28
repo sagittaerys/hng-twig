@@ -1,63 +1,42 @@
-<?php
+<?php 
 
 namespace App\Controllers;
 
-class DashboardController
+class DashboardController extends BaseController
 {
-    private $twig;
     private $ticketsFile;
 
     public function __construct($twig)
     {
-        $this->twig = $twig;
+        parent::__construct($twig);
         $this->ticketsFile = __DIR__ . '/../../data/tickets.json';
-        
-        // Create data directory if it doesn't exist
+
         $dataDir = dirname($this->ticketsFile);
-        if (!is_dir($dataDir)) {
-            mkdir($dataDir, 0777, true);
-        }
-        
-        // Initialize tickets file if it doesn't exist
-        if (!file_exists($this->ticketsFile)) {
-            file_put_contents($this->ticketsFile, json_encode([]));
-        }
+        if (!is_dir($dataDir)) mkdir($dataDir, 0777, true);
+        if (!file_exists($this->ticketsFile)) file_put_contents($this->ticketsFile, json_encode([]));
     }
 
     public function index()
     {
-        // Check authentication
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
-            exit;
-        }
+        $session = $this->ensureAuthenticated();
+        $userId = $session['userId'];
 
-        // Check session expiration
-        if (isset($_SESSION['expires_at']) && $_SESSION['expires_at'] < time()) {
-            session_destroy();
-            header('Location: /login');
-            exit;
-        }
-
-        // Load tickets
-        $allTickets = json_decode(file_get_contents($this->ticketsFile), true);
-        $userTickets = array_filter($allTickets, function($ticket) {
-            return $ticket['user_id'] === $_SESSION['user_id'];
+        $allTickets = json_decode(file_get_contents($this->ticketsFile), true) ?: [];
+        
+        // Filter tickets for the current user using 'userId' (matches TicketController)
+        $userTickets = array_filter($allTickets, function($ticket) use ($userId) {
+            return isset($ticket['userId']) && (string)$ticket['userId'] === (string)$userId;
         });
 
-        // Calculate stats
         $stats = [
             'total' => count($userTickets),
-            'open' => count(array_filter($userTickets, function($t) {
-                return $t['status'] === 'open';
-            })),
-            'resolved' => count(array_filter($userTickets, function($t) {
-                return $t['status'] === 'closed';
-            }))
+            'open' => count(array_filter($userTickets, fn($t) => ($t['status'] ?? '') === 'open')),
+            'resolved' => count(array_filter($userTickets, fn($t) => ($t['status'] ?? '') === 'closed'))
         ];
 
-        echo $this->twig->render('dashboard.twig', [
-            'stats' => $stats
+        $this->render('dashboard.twig', [
+            'stats' => $stats,
+            'user' => $session
         ]);
     }
 }

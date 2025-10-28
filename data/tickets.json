@@ -1,1 +1,32 @@
-[]
+[
+    {
+        "id": "1761642124104",
+        "userId": "69000bb022054",
+        "title": "Jiggy",
+        "description": "Olami",
+        "status": "in_progress",
+        "priority": "medium",
+        "createdAt": "2025-10-28T09:02:04+00:00",
+        "updatedAt": "2025-10-28T09:02:04+00:00"
+    },
+    {
+        "id": "1761643687906",
+        "userId": "69000bb022054",
+        "title": "Jack!",
+        "description": "Mullen press me money",
+        "status": "open",
+        "priority": "medium",
+        "createdAt": "2025-10-28T09:28:07+00:00",
+        "updatedAt": "2025-10-28T09:28:07+00:00"
+    },
+    {
+        "id": "1761643713907",
+        "userId": "69000bb022054",
+        "title": "Oba",
+        "description": "Of Benin",
+        "status": "closed",
+        "priority": "medium",
+        "createdAt": "2025-10-28T09:28:33+00:00",
+        "updatedAt": "2025-10-28T09:28:33+00:00"
+    }
+]
