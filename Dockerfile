@@ -1,17 +1,29 @@
-# Use the official PHP 8.2 image with Apache
-FROM php:8.2-apache
+FROM php:8.2-cli
 
-# Enable Apache mod_rewrite for clean URLs
-RUN a2enmod rewrite
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    zip \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set the working directory inside the container
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set working directory
 WORKDIR /var/www/html
 
-# Copy all files from your project into the container
+# Copy application files
 COPY . .
 
-# Expose the web port
-EXPOSE 80
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Start Apache
-CMD ["apache2-foreground"]
+# Create data directory with proper permissions
+RUN mkdir -p /var/www/html/data && chmod -R 777 /var/www/html/data
+
+# Expose port (Render will set the PORT env variable)
+EXPOSE 8080
+
+# Start PHP built-in server
+CMD php -S 0.0.0.0:${PORT:-8080} -t public

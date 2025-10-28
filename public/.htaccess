@@ -1,8 +1,31 @@
-RewriteEngine On
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirect to index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+</IfModule>
+```
 
-# If the requested file or directory exists, serve it directly
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+## Step 4: Create `.dockerignore` file (optional but recommended)
+```
+vendor/
+.git/
+.gitignore
+README.md
+.env
+composer.lock
+Procfile
+railway.toml
+```
 
-# Otherwise, route all requests to index.php
-RewriteRule ^ index.php [QSA,L]
+## Step 5: Update `.gitignore` (if you haven't already)
+
+Make sure these are in your `.gitignore`:
+```
+/vendor/
+.env
+composer.lock
+data/tickets.json
+data/users.json
