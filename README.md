@@ -18,7 +18,6 @@ A robust ticket management web application built with PHP and Twig templating en
 
 - **Backend**: PHP 7.4+
 - **Templating Engine**: Twig 3.0
-- **Data Storage**: JSON file-based database
 - **Frontend**: Vanilla JavaScript
 - **Styling**: Custom CSS (shared with React and Vue versions)
 
