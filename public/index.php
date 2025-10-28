@@ -19,12 +19,13 @@ try {
     require_once __DIR__ . '/../vendor/autoload.php';
 
     // Check if templates directory exists
-    if (!is_dir(__DIR__ . '/../templates')) {
-        die('ERROR: templates/ directory not found');
+    $templatesPath = __DIR__ . '/../templates';
+    if (!is_dir($templatesPath)) {
+        die('ERROR: templates/ directory not found at: ' . $templatesPath);
     }
 
     // Initialize Twig
-    $loader = new FilesystemLoader(__DIR__ . '/../templates');
+    $loader = new FilesystemLoader($templatesPath);
     $twig = new Environment($loader, [
         'cache' => false,
         'debug' => true,
@@ -52,13 +53,15 @@ try {
         }
     }));
 
-    // Simple router
+    // Simple router - FIXED
     $request_uri = $_SERVER['REQUEST_URI'];
-    $script_name = dirname($_SERVER['SCRIPT_NAME']);
-    $path = str_replace($script_name, '', $request_uri);
-    $path = parse_url($path, PHP_URL_PATH);
-    $path = rtrim($path, '/');
-    if (empty($path)) {
+    $path = parse_url($request_uri, PHP_URL_PATH);
+    
+    // Remove any leading slashes and normalize
+    $path = '/' . trim($path, '/');
+    
+    // If path is just '/', leave it as is
+    if ($path === '/') {
         $path = '/';
     }
 
@@ -110,6 +113,9 @@ try {
                 require_once __DIR__ . '/../src/controllers/TicketController.php';
                 $controller = new App\Controllers\TicketController($twig);
                 $controller->update();
+            } else {
+                header('Location: /tickets');
+                exit;
             }
             break;
         
@@ -118,6 +124,9 @@ try {
                 require_once __DIR__ . '/../src/controllers/TicketController.php';
                 $controller = new App\Controllers\TicketController($twig);
                 $controller->delete();
+            } else {
+                header('Location: /tickets');
+                exit;
             }
             break;
         
@@ -129,7 +138,16 @@ try {
         
         default:
             http_response_code(404);
-            echo $twig->render('404.twig');
+            // Check if 404.twig exists, otherwise show simple error
+            if (file_exists($templatesPath . '/404.twig')) {
+                echo $twig->render('404.twig');
+            } else {
+                echo '<!DOCTYPE html><html><head><title>404 Not Found</title></head><body>';
+                echo '<h1>404 - Page Not Found</h1>';
+                echo '<p>The page you are looking for does not exist.</p>';
+                echo '<a href="/">Go back to home</a>';
+                echo '</body></html>';
+            }
             break;
     }
 
