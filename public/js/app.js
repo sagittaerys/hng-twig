@@ -1,6 +1,4 @@
-// public/js/app.js
 
-// Toast notification function
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;

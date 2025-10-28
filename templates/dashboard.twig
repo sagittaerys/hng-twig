@@ -1,0 +1,44 @@
+{% extends "base.twig" %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+  <main class="dashboard-main">
+    <div class="dashboard-container">
+      <!-- Dashboard Header -->
+      <div class="dashboard-title-section">
+        <div>
+          <h1 class="dashboard-title">Dashboard</h1>
+          <p class="dashboard-subtitle">
+            Welcome back, {{ user.name|split(' ')[0] ?? 'User' }}!
+          </p>
+        </div>
+
+        <a href="/tickets" class="manage-btn">Manage Tickets</a>
+      </div>
+
+      <!-- Stats Cards -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Total Tickets</div>
+          <div class="stat-value">{{ stats.total|number_format(0, '.', ',') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Open Tickets</div>
+          <div class="stat-value">{{ stats.open|number_format(0, '.', ',') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Resolved Tickets</div>
+          <div class="stat-value">{{ stats.resolved|number_format(0, '.', ',') }}</div>
+        </div>
+      </div>
+
+      <!-- Logout -->
+      <div class="logout-section">
+        <form method="POST" action="/logout">
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+{% endblock %}

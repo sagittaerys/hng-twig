@@ -1,1 +1,16 @@
-[]
+[
+    {
+        "id": "6900057f764dc",
+        "name": "Aremu Olamilekan",
+        "email": "aremu0235@gmail.com",
+        "password": "$2y$12$1FGj7gvxugyTXOr640KzeugVoE7coUmWORFEuYTubWso5DMBtEVtO",
+        "created_at": "2025-10-27 23:51:28"
+    },
+    {
+        "id": "69000bb022054",
+        "name": "Valeria Beulen",
+        "email": "beulenvaleria@gmail.com",
+        "password": "$2y$12$iHZe85\/gzWQsflkJP6kqB.HPoY2m7YF8AzYhxiUa5BAFheUqvcbKi",
+        "created_at": "2025-10-28 00:17:52"
+    }
+]
